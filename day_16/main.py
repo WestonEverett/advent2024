@@ -95,14 +95,17 @@ class Maze:
         score += abs(delta[0]) + abs(delta[1])
 
         if delta[0] != 0:
-            if sgn(delta[0]) != sgn(pos.direction[0]):
-                score += 1000
+            score += abs(sgn(delta[0]) - sgn(pos.direction[0])) * 1000
         
         if delta[1] != 0:
-            if sgn(delta[1]) != sgn(pos.direction[1]):
-                score += 1000
+            score += abs(sgn(delta[1]) - sgn(pos.direction[1])) * 1000
         
         return score
+    
+    def spread(self, explored, cur):
+        a = set()
+
+        
     
     def solve(self):
         ent = 0
@@ -131,15 +134,17 @@ class Maze:
                         if exp[0] == n.cost:
                             new_sources = exp[1] + [cur]
                             explored[(n.coord, n.direction)] = (exp[0], new_sources)
-                        else:
-                            assert exp[0] < n.cost
+                        elif exp[0] > n.cost:
+                            explored[(n.coord, n.direction)] = (n.cost, [cur])
+                            print(exp)
+                            print(n)
                     else:
                         ent += 1
                         explored[(n.coord, n.direction)] = (n.cost, [cur])
                         heapq.heappush(nodes, (self.heur(n), ent, n))
         
         for k in explored:
-            print(explored[k])
+            print(k, explored[k])
         return self.cost
     
     def get_paths(self, score, loc: tp.Optional[Position] = None) -> tp.Tuple[tp.Dict[tp.Tuple[int,int], int]]:
