@@ -189,7 +189,7 @@ class Maze:
                     f_maze[cur[0]][cur[1]] = b_val + 1
                     nodes.append(cur)
 
-        count = 0
+        cheats = tp.Set[tp.Tuple[tp.Tuple[int, int], tp.Tuple[int, int]]]
         for i in range(1, len(self.maze) - 1):
             for j in range(1, len(self.maze[0]) - 1):
                 if self.maze[i][j] != "#":
@@ -197,19 +197,16 @@ class Maze:
 
                 fs = []
                 bs = []
-                for n_i, n_j in adj((i,j)):
-                    if isinstance(f_maze[n_i][n_j], int):
-                        fs.append(f_maze[n_i][n_j])
-                    if isinstance(b_maze[n_i][n_j], int):
-                        bs.append(b_maze[n_i][n_j])
+                for n_i_1, n_j_1 in adj((i,j)):
+                    for n_i_2, n_j_2 in adj((i,j)):
+                        if isinstance(f_maze[n_i_1][n_j_1], int) and isinstance(b_maze[n_i_2][n_j_2], int):
+                            sol = f_maze[n_i_1][n_j_1] + b_maze[n_i_2][n_j_2]
+                            if (sol + 2) - min_jump <= len(base_solve) - 1:
+                                cheats.add(((n_i_1, n_j_1), (n_i_2, n_j_2)))
 
-                if fs and bs:
-                    sol = min(fs) + max(bs)
-
-                    if (sol + 2) - min_jump < len(base_solve) - 1:
-                        count += 1
+                    
         
-        return count
+        return len(cheats)
     
 
 maze = Maze.build(base_grid)
