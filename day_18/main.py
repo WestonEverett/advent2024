@@ -12,7 +12,7 @@ with open(r"day_18\data.txt") as file:
 def print_grid(g):
     for l in g:
         print(l)
-
+ 
 def tuple_sub(a, b):
     return (a[0]-b[0], a[1]-b[1])
 
